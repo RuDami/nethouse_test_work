@@ -43,7 +43,7 @@ window.onload = function () {
             formData.append("Имя", data.name);
             formData.append("Email", data.email);
             formData.append("Телефон", data.phone);
-            result.textContent = 'Отправляем...';
+            resultAll.textContent = 'Отправляем...';
             let request = new XMLHttpRequest();
             request.open("POST", "submitform.php");
             request.send(formData);
