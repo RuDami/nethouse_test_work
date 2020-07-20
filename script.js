@@ -2,16 +2,16 @@ window.onload = function () {
 
     const resultAll = document.querySelector('.resultAll');
     const sendButton = document.querySelector('#send');
-    const itemPhone = {value: '', checked: false};
-    const itemEmail = {value: '', checked: false};
-    const itemName = {value: '', checked: false};
+    const itemPhone = {value: '', id: '#phone', result: '.phoneResult', checked: false};
+    const itemEmail = {value: '', id: '#email', result: '.emailResult', checked: false};
+    const itemName = {value: '', id: '#name', result: '.nameResult', checked: false};
 
-    function checkInput(targetInput, reg, targetResult, item) {
-        const input = document.querySelector(targetInput);
-        const result = document.querySelector(targetResult);
+    function checkInput(item, reg) {
+        const input = document.querySelector(item.id);
+        const result = document.querySelector(item.result);
         input.addEventListener('input', (event) => {
             item.value = event.target.value;
-            if (reg.test(event.target.value) === false) {
+            if (reg.test(item.value) === false) {
                 result.textContent = 'Введены некоректные данные';
                 item.checked = false;
             } else {
@@ -20,8 +20,8 @@ window.onload = function () {
             }
         });
     }
-    function checkPaste(targetInput, reg, item) {
-        const input = document.querySelector(targetInput);
+    function checkPaste(item, reg ) {
+        const input = document.querySelector(item.id);
         input.addEventListener('paste', (event) => {
             let paste = (event.clipboardData || window.clipboardData).getData('text');
             paste = paste.replace(reg, "");
@@ -46,8 +46,6 @@ window.onload = function () {
             resultAll.textContent = 'Укажите правильные данные';
         }
     }
-
-
     sendData = async (data) => {
         let formData = new FormData();
         formData.append("Имя", data.name);
@@ -61,13 +59,14 @@ window.onload = function () {
         resultAll.textContent = 'Успешно отправлено!';
 
     }
-    checkInput('#phone', /^((7|8|\+7|)[\-]?)+(\(?\d{3}\)?[\-]?)?[\d\-]{10,14}$/, '.phoneResult', itemPhone);
-    checkInput('#email', /^([A-Za-z0-9_\-\.])+\@gmail.com$/, '.emailResult', itemEmail);
-    checkInput('#name', /^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/, '.nameResult', itemName);
 
-    checkPaste('#phone', /[^0-9\-\+]+/gi, itemPhone);
-    checkPaste('#email', /[^A-Za-z0-9_\-\.\@]+/gi, itemEmail);
-    checkPaste('#name', /[^А-ЯЁа-яё\-]+/gi, itemName);
+    checkInput(itemPhone, /^((7|8|\+7|)[\-]?)+(\(?\d{3}\)?[\-]?)?[\d\-]{10,14}$/, );
+    checkInput(itemEmail, /^([A-Za-z0-9_\-\.])+\@gmail.com$/);
+    checkInput(itemName, /^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/);
+
+    checkPaste(itemPhone, /[^0-9\-\+]+/gi);
+    checkPaste(itemEmail, /[^A-Za-z0-9_\-\.\@]+/gi);
+    checkPaste(itemName, /[^А-ЯЁа-яё\-]+/gi);
 
     sendButton.addEventListener('click', (event) => {
         event.preventDefault();
