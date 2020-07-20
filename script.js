@@ -5,6 +5,7 @@ window.onload = function () {
     const itemPhone = {value: '', checked: false};
     const itemEmail = {value: '', checked: false};
     const itemName = {value: '', checked: false};
+
     function checkInput(targetInput, reg, targetResult, item) {
         const input = document.querySelector(targetInput);
         const result = document.querySelector(targetResult);
@@ -29,7 +30,7 @@ window.onload = function () {
             event.preventDefault();
         });
     }
-    function sendData(itemPhone, itemEmail, itemName) {
+    function btnClick(itemPhone, itemEmail, itemName) {
         if (itemPhone.checked && itemEmail.checked && itemName.checked) {
             const data = {
                 'name': itemName.value,
@@ -39,21 +40,27 @@ window.onload = function () {
             console.log('Имя:'+data.name)
             console.log( 'Email:'+data.email)
             console.log('Телефон:'+ data.phone)
-            let formData = new FormData();
-            formData.append("Имя", data.name);
-            formData.append("Email", data.email);
-            formData.append("Телефон", data.phone);
-            resultAll.textContent = 'Отправляем...';
-            let request = new XMLHttpRequest();
-            request.open("POST", "submitform.php");
-            request.send(formData);
-            resultAll.textContent = 'Успешно отправлено!';
+            sendData(data);
         } else {
             console.log('Ошибочка вышла');
             resultAll.textContent = 'Укажите правильные данные';
         }
     }
 
+
+    sendData = async (data) => {
+        let formData = new FormData();
+        formData.append("Имя", data.name);
+        formData.append("Email", data.email);
+        formData.append("Телефон", data.phone);
+        resultAll.textContent = 'Отправляем...';
+        let request = new XMLHttpRequest();
+        request.open("POST", "someform.php");
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        request.send(formData);
+        resultAll.textContent = 'Успешно отправлено!';
+
+    }
     checkInput('#phone', /^((7|8|\+7|)[\-]?)+(\(?\d{3}\)?[\-]?)?[\d\-]{10,14}$/, '.phoneResult', itemPhone);
     checkInput('#email', /^([A-Za-z0-9_\-\.])+\@gmail.com$/, '.emailResult', itemEmail);
     checkInput('#name', /^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/, '.nameResult', itemName);
@@ -64,6 +71,6 @@ window.onload = function () {
 
     sendButton.addEventListener('click', (event) => {
         event.preventDefault();
-        sendData(itemPhone, itemEmail, itemName);
+        btnClick(itemPhone, itemEmail, itemName);
     })
 }
