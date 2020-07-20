@@ -1,6 +1,6 @@
 window.onload = function () {
 
-    const result = document.querySelector('.resultAll');
+    const resultAll = document.querySelector('.resultAll');
     const sendButton = document.querySelector('#send');
     const itemPhone = {value: '', checked: false};
     const itemEmail = {value: '', checked: false};
@@ -47,10 +47,10 @@ window.onload = function () {
             let request = new XMLHttpRequest();
             request.open("POST", "submitform.php");
             request.send(formData);
-            result.textContent = 'Успешно отправлено!';
+            resultAll.textContent = 'Успешно отправлено!';
         } else {
             console.log('Ошибочка вышла');
-            result.textContent = 'Укажите правильные данные';
+            resultAll.textContent = 'Укажите правильные данные';
         }
     }
 
