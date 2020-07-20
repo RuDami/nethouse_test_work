@@ -20,16 +20,24 @@ window.onload = function () {
             }
         });
     }
-    function checkPaste(item, reg ) {
+
+    function checkPaste(item, reg) {
         const input = document.querySelector(item.id);
         input.addEventListener('paste', (event) => {
             let paste = (event.clipboardData || window.clipboardData).getData('text');
             paste = paste.replace(reg, "");
-            event.target.value = paste;
+            if (input.setRangeText) {
+                input.setRangeText(paste)
+            } else {
+                input.focus()
+                document.execCommand('insertText', false, paste);
+            }
             item.value = event.target.value;
+            console.log( item.value)
             event.preventDefault();
         });
     }
+
     function btnClick(itemPhone, itemEmail, itemName) {
         if (itemPhone.checked && itemEmail.checked && itemName.checked) {
             const data = {
@@ -37,15 +45,16 @@ window.onload = function () {
                 'email': itemEmail.value,
                 'phone': itemPhone.value
             }
-            console.log('Имя:'+data.name)
-            console.log( 'Email:'+data.email)
-            console.log('Телефон:'+ data.phone)
+            console.log('Имя:' + data.name)
+            console.log('Email:' + data.email)
+            console.log('Телефон:' + data.phone)
             sendData(data);
         } else {
             console.log('Ошибочка вышла');
             resultAll.textContent = 'Укажите правильные данные';
         }
     }
+
     sendData = async (data) => {
         let formData = new FormData();
         formData.append("Имя", data.name);
@@ -60,7 +69,7 @@ window.onload = function () {
 
     }
 
-    checkInput(itemPhone, /^((7|8|\+7|)[\-]?)+(\(?\d{3}\)?[\-]?)?[\d\-]{10,14}$/, );
+    checkInput(itemPhone, /^((7|8|\+7|)[\-]?)+(\(?\d{3}\)?[\-]?)?[\d\-]{10,14}$/,);
     checkInput(itemEmail, /^([A-Za-z0-9_\-\.])+\@gmail.com$/);
     checkInput(itemName, /^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/);
 
